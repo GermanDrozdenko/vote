@@ -1,9 +1,19 @@
 from django.shortcuts import render, redirect
+from datetime import datetime
 from .models import Voting
 
 
 def votings_page(request):
     votings = Voting.objects.all()
+    for voting in votings:
+        if datetime.now() >= voting.end_date.replace(tzinfo=None):
+            voting.expired = True
+        elif voting.first_char_votes >= voting.max_votes \
+                or voting.second_char_votes >= voting.max_votes:
+            voting.expired = True
+        else:
+            voting.expired = False
+
     context = {
         'votings': votings,
     }
