@@ -1,48 +1,31 @@
-<!doctype html>
-<html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <title>Characters</title>
-</head>
-<body>
-    <header class="bg-dark-subtle">
-            <div class="d-flex w-100">
-                <ul class="d-flex flex-row nav nav-pills w-100">
-                    <li class="nav-item w-50">
-                        <a href="#" class="nav-link active d-flex justify-content-center"
-                           aria-current="page">Characters
-                        </a>
-                    </li>
-                    <li class="nav-item w-50">
-                        <a href="#" class="nav-link d-flex justify-content-center">Votings</a>
-                    </li>
-                </ul>
-            </div>
-    </header>
-    <div class="container mt-5">
-        {% for character in characters %}
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-secondary-subtle">
-                <div class="col p-4 d-flex flex-column position-static">
-                    {% if character.last_name %}
-                    <h3 class="mb-0">{{ character.first_name }} {{ character.second_name }} {{ character.last_name }}</h3>
-                    {% else %}
-                    <h3 class="mb-0">{{ character.first_name }} {{ character.second_name }}</h3>
-                    {% endif %}
-                    <div class="mb-1 text-body-secondary">Age: {{ character.age }}</div>
-                  <p class="card-text mb-auto me-3">{{ character.bio }}</p>
-                </div>
-                {% if character.img_url %}
-                    <div class="col-auto d-none d-lg-block w-25 h-25">
-                      <img src="{{ character.img_url.url }}" alt="{{ character.img_url }}" class="img-fluid img-thumbnail">
-                    </div>
+{% extends 'base.html' %}
+{% block header %}
+    <li class="nav-item w-50">
+        <a class="nav-link active d-flex justify-content-center"
+           aria-current="page">Characters
+        </a>
+    </li>
+    <li class="nav-item w-50">
+        <a href="/votings" class="nav-link d-flex justify-content-center">Votings</a>
+    </li>
+{% endblock %}
+{% block content %}
+    {% for character in characters %}
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative bg-secondary-subtle">
+            <div class="col p-4 d-flex flex-column position-static">
+                {% if character.last_name %}
+                <h3 class="mb-0">{{ character.first_name }} {{ character.second_name }} {{ character.last_name }}</h3>
+                {% else %}
+                <h3 class="mb-0">{{ character.first_name }} {{ character.second_name }}</h3>
                 {% endif %}
+                <div class="mb-1 text-body-secondary">Age: {{ character.age }}</div>
+              <p class="card-text mb-auto me-3">{{ character.bio }}</p>
             </div>
-        {% endfor %}
-    </div>
-</body>
-</html>
+            {% if character.img_url %}
+                <div class="col-auto d-none d-lg-block w-25 h-25">
+                  <img src="{{ character.img_url.url }}" alt="{{ character.img_url }}" class="img-fluid img-thumbnail">
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endblock %}

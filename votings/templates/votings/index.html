@@ -1,112 +1,29 @@
-<!doctype html>
-<html lang="en" data-bs-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <title>Votings</title>
-    <style>
-      .hover-effect:hover {
-        opacity: 0.5;
-      }
-    </style>
-</head>
-<body>
-    <header class="bg-dark-subtle">
-        <div class="d-flex w-100">
-            <ul class="d-flex flex-row nav nav-pills w-100">
-                <li class="nav-item w-50">
-                    <a href="/characters" class="nav-link d-flex justify-content-center">Characters</a>
-                </li>
-                <li class="nav-item w-50">
-                    <a class="nav-link active d-flex justify-content-center" aria-current="page">Votings</a>
-                </li>
-            </ul>
-        </div>
-    </header>
-    <div class="container mt-5">
-        {% for voting in votings %}
-            {% if voting.expired == False %}
-                <div class="w-100 justify-content-center row g-0 border rounded overflow-hidden flex-md-row mb-4
-                    shadow-sm h-md-250 position-relative bg-secondary-subtle">
-                    <div class="row p-4 d-flex flex-row position-static">
-                        <div class="d-flex justify-content-center fs-2">
-                            <h2>{{ voting.title }}</h2>
-                        </div>
-                        <div class="mb-3 text-body-secondary d-flex justify-content-center">
-                            {{ voting.start_date }} - {{ voting.end_date }}
-                        </div>
-                        <hr class="mb-4" />
-                        <div class="d-flex justify-content-between mb-3">
-                            <div>
-                                <a href="{% url 'add_vote' voting.id 'first_char_votes' %}"
-                                   class="link-light link-underline link-underline-opacity-0 hover-effect">
-                                    <div class="img-thumbnail"
-                                         style="background-image: url({{ voting.characters.all.0.img_url.url }});
-                                         background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
-                                    </div>
-                                    <div class="d-flex flex-column pt-2" style="max-width: 300px;">
-                                        <h4 class="text-center text-break">
-                                            {{ voting.characters.all.0.first_name }}
-                                            {{ voting.characters.all.0.second_name }}
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="d-flex flex-column h-100 pt-5">
-                                <div>
-                                    <h4 class="text-center mb-0">Score</h4>
-                                    <h1 class="text-center mb-0 display-2">
-                                        {{ voting.first_char_votes }} - {{ voting.second_char_votes }}
-                                    </h1>
-                                </div>
-                                {% if voting.max_votes %}
-                                <hr />
-                                <div>
-                                    <h1 class="text-center display-4 mb-0">{{ voting.max_votes }}</h1>
-                                    <p class="text-center">votes to auto-win</p>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div>
-                                <a href="{% url 'add_vote' voting.id 'second_char_votes' %}"
-                                    class="link-light link-underline link-underline-opacity-0 hover-effect">
-                                    <div class="img-thumbnail"
-                                         style="background-image: url({{ voting.characters.all.1.img_url.url }});
-                                         background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
-                                    </div>
-                                    <div class="d-flex flex-column pt-2" style="max-width: 300px;">
-                                        <h4 class="text-center text-break">
-                                            {{ voting.characters.all.1.first_name }}
-                                            {{ voting.characters.all.1.second_name }}
-                                        </h4>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <hr class="mb-1" />
+{% extends 'base.html' %}
+{% block header %}
+    <li class="nav-item w-50">
+        <a href="/characters" class="nav-link d-flex justify-content-center">Characters</a>
+    </li>
+    <li class="nav-item w-50">
+        <a class="nav-link active d-flex justify-content-center" aria-current="page">Votings</a>
+    </li>
+{% endblock %}
+{% block content %}
+    {% for voting in votings %}
+        {% if voting.expired == False %}
+            <div class="w-100 justify-content-center row g-0 border rounded overflow-hidden flex-md-row mb-4
+                shadow-sm h-md-250 position-relative bg-secondary-subtle">
+                <div class="row p-4 d-flex flex-row position-static">
+                    <div class="d-flex justify-content-center fs-2">
+                        <h2>{{ voting.title }}</h2>
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-        {% for voting in votings %}
-            {% if voting.expired %}
-                <div class="w-100 justify-content-center row g-0 border rounded overflow-hidden flex-md-row mb-4
-                    shadow-sm h-md-250 position-relative bg-secondary-subtle"
-                    style="opacity: 0.5;">
-                    <div class="row p-4 d-flex flex-row position-static">
-                        <div class="d-flex justify-content-center fs-2">
-                            <h2>{{ voting.title }}</h2>
-                        </div>
-                        <div class="mb-3 text-body-secondary d-flex justify-content-center">
-                            {{ voting.start_date }} - {{ voting.end_date }}
-                        </div>
-                        <hr class="mb-4" />
-                        <div class="d-flex justify-content-between mb-3">
-                            <div>
+                    <div class="mb-3 text-body-secondary d-flex justify-content-center">
+                        {{ voting.start_date }} - {{ voting.end_date }}
+                    </div>
+                    <hr class="mb-4" />
+                    <div class="d-flex justify-content-between mb-3">
+                        <div>
+                            <a href="{% url 'add_vote' voting.id 'first_char_votes' %}"
+                               class="link-light link-underline link-underline-opacity-0 hover-effect">
                                 <div class="img-thumbnail"
                                      style="background-image: url({{ voting.characters.all.0.img_url.url }});
                                      background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
@@ -117,33 +34,26 @@
                                         {{ voting.characters.all.0.second_name }}
                                     </h4>
                                 </div>
-                            </div>
-                            <div class="d-flex flex-column h-100 pt-5 pb-4">
-                                <div>
-                                    {% if voting.first_char_votes > voting.second_char_votes %}
-                                        <h4 class="text-center mb-0">Winner</h4>
-                                        <h1 class="text-center display-4 text-break">
-                                            {{ voting.characters.all.0.first_name }} {{ voting.characters.all.0.second_name }}
-                                        </h1>
-                                        <hr />
-                                        <p class="text-center mb-0">with</p>
-                                        <h1 class="text-center display-4 mb-0">{{ voting.first_char_votes }}</h1>
-                                        <p class="text-center">votes</p>
-                                    {% elif voting.second_char_votes > voting.first_char_votes %}
-                                        <h4 class="text-center mb-0">Winner</h4>
-                                        <h1 class="text-center display-4 text-break">
-                                            {{ voting.characters.all.1.first_name }} {{ voting.characters.all.1.second_name }}
-                                        </h1>
-                                        <hr />
-                                        <p class="text-center mb-0">with</p>
-                                        <h1 class="text-center display-4 mb-0">{{ voting.second_char_votes }}</h1>
-                                        <p class="text-center">votes</p>
-                                    {% else %}
-                                        <h1 class="text-center display-4 mb-0">Draw</h1>
-                                    {% endif %}
-                                </div>
-                            </div>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column h-100 pt-5">
                             <div>
+                                <h4 class="text-center mb-0">Score</h4>
+                                <h1 class="text-center mb-0 display-2">
+                                    {{ voting.first_char_votes }} - {{ voting.second_char_votes }}
+                                </h1>
+                            </div>
+                            {% if voting.max_votes %}
+                            <hr />
+                            <div>
+                                <h1 class="text-center display-4 mb-0">{{ voting.max_votes }}</h1>
+                                <p class="text-center">votes to auto-win</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <a href="{% url 'add_vote' voting.id 'second_char_votes' %}"
+                                class="link-light link-underline link-underline-opacity-0 hover-effect">
                                 <div class="img-thumbnail"
                                      style="background-image: url({{ voting.characters.all.1.img_url.url }});
                                      background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
@@ -154,12 +64,81 @@
                                         {{ voting.characters.all.1.second_name }}
                                     </h4>
                                 </div>
+                            </a>
+                        </div>
+                    </div>
+                    <hr class="mb-1" />
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% for voting in votings %}
+        {% if voting.expired %}
+            <div class="w-100 justify-content-center row g-0 border rounded overflow-hidden flex-md-row mb-4
+                shadow-sm h-md-250 position-relative bg-secondary-subtle"
+                style="opacity: 0.5;">
+                <div class="row p-4 d-flex flex-row position-static">
+                    <div class="d-flex justify-content-center fs-2">
+                        <h2>{{ voting.title }}</h2>
+                    </div>
+                    <div class="mb-3 text-body-secondary d-flex justify-content-center">
+                        {{ voting.start_date }} - {{ voting.end_date }}
+                    </div>
+                    <hr class="mb-4" />
+                    <div class="d-flex justify-content-between mb-3">
+                        <div>
+                            <div class="img-thumbnail"
+                                 style="background-image: url({{ voting.characters.all.0.img_url.url }});
+                                 background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
+                            </div>
+                            <div class="d-flex flex-column pt-2" style="max-width: 300px;">
+                                <h4 class="text-center text-break">
+                                    {{ voting.characters.all.0.first_name }}
+                                    {{ voting.characters.all.0.second_name }}
+                                </h4>
                             </div>
                         </div>
-                        <hr class="mb-3" />
+                        <div class="d-flex flex-column h-100 pt-5 pb-4">
+                            <div>
+                                {% if voting.first_char_votes > voting.second_char_votes %}
+                                    <h4 class="text-center mb-0">Winner</h4>
+                                    <h1 class="text-center display-4 text-break">
+                                        {{ voting.characters.all.0.first_name }} {{ voting.characters.all.0.second_name }}
+                                    </h1>
+                                    <hr />
+                                    <p class="text-center mb-0">with</p>
+                                    <h1 class="text-center display-4 mb-0">{{ voting.first_char_votes }}</h1>
+                                    <p class="text-center">votes</p>
+                                {% elif voting.second_char_votes > voting.first_char_votes %}
+                                    <h4 class="text-center mb-0">Winner</h4>
+                                    <h1 class="text-center display-4 text-break">
+                                        {{ voting.characters.all.1.first_name }} {{ voting.characters.all.1.second_name }}
+                                    </h1>
+                                    <hr />
+                                    <p class="text-center mb-0">with</p>
+                                    <h1 class="text-center display-4 mb-0">{{ voting.second_char_votes }}</h1>
+                                    <p class="text-center">votes</p>
+                                {% else %}
+                                    <h1 class="text-center display-4 mb-0">Draw</h1>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="img-thumbnail"
+                                 style="background-image: url({{ voting.characters.all.1.img_url.url }});
+                                 background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
+                            </div>
+                            <div class="d-flex flex-column pt-2" style="max-width: 300px;">
+                                <h4 class="text-center text-break">
+                                    {{ voting.characters.all.1.first_name }}
+                                    {{ voting.characters.all.1.second_name }}
+                                </h4>
+                            </div>
+                        </div>
                     </div>
+                    <hr class="mb-3" />
                 </div>
-            {% endif %}
-        {% endfor %}
-    </div>
-</body>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
