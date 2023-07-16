@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 {% block header %}
     <li class="nav-item w-50">
         <a href="/characters" class="nav-link d-flex justify-content-center">Characters</a>
@@ -9,7 +10,7 @@
 {% endblock %}
 {% block content %}
     {% for voting in votings %}
-        {% if voting.expired == False %}
+        {% if not voting.expired %}
             <div class="w-100 justify-content-center row g-0 border rounded overflow-hidden flex-md-row mb-4
                 shadow-sm h-md-250 position-relative bg-secondary-subtle">
                 <div class="row p-4 d-flex flex-row position-static">
@@ -19,22 +20,48 @@
                     <div class="mb-3 text-body-secondary d-flex justify-content-center">
                         {{ voting.start_date }} - {{ voting.end_date }}
                     </div>
+                    {% if voting.id|slugify in request.session.voted_list %}
+                        {% if request.session.voted_list|get_item:voting.id == 'first_char_votes' %}
+                            <div class="mb-3 d-flex justify-content-center">
+                                You voted for {{ voting.characters.all.0.first_name }} {{ voting.characters.all.0.second_name }}
+                            </div>
+                        {% else %}
+                            <div class="mb-3 d-flex justify-content-center">
+                                You voted for {{ voting.characters.all.1.first_name }} {{ voting.characters.all.1.second_name }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
                     <hr class="mb-4" />
                     <div class="d-flex justify-content-between mb-3">
                         <div>
-                            <a href="{% url 'add_vote' voting.id 'first_char_votes' %}"
-                               class="link-light link-underline link-underline-opacity-0 hover-effect">
-                                <div class="img-thumbnail"
-                                     style="background-image: url({{ voting.characters.all.0.img_url.url }});
-                                     background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
-                                </div>
-                                <div class="d-flex flex-column pt-2" style="max-width: 300px;">
-                                    <h4 class="text-center text-break">
-                                        {{ voting.characters.all.0.first_name }}
-                                        {{ voting.characters.all.0.second_name }}
-                                    </h4>
-                                </div>
-                            </a>
+                            {% if voting.id|slugify in request.session.voted_list %}
+                                <a class="link-light link-underline link-underline-opacity-0">
+                                    <div class="img-thumbnail"
+                                         style="background-image: url({{ voting.characters.all.0.img_url.url }});
+                                         background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
+                                    </div>
+                                    <div class="d-flex flex-column pt-2" style="max-width: 300px;">
+                                        <h4 class="text-center text-break">
+                                            {{ voting.characters.all.0.first_name }}
+                                            {{ voting.characters.all.0.second_name }}
+                                        </h4>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'add_vote' voting.id 'first_char_votes' %}"
+                                   class="link-light link-underline link-underline-opacity-0 hover-effect">
+                                    <div class="img-thumbnail"
+                                         style="background-image: url({{ voting.characters.all.0.img_url.url }});
+                                         background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
+                                    </div>
+                                    <div class="d-flex flex-column pt-2" style="max-width: 300px;">
+                                        <h4 class="text-center text-break">
+                                            {{ voting.characters.all.0.first_name }}
+                                            {{ voting.characters.all.0.second_name }}
+                                        </h4>
+                                    </div>
+                                </a>
+                            {% endif %}
                         </div>
                         <div class="d-flex flex-column h-100 pt-5">
                             <div>
@@ -52,19 +79,34 @@
                             {% endif %}
                         </div>
                         <div>
-                            <a href="{% url 'add_vote' voting.id 'second_char_votes' %}"
-                                class="link-light link-underline link-underline-opacity-0 hover-effect">
-                                <div class="img-thumbnail"
-                                     style="background-image: url({{ voting.characters.all.1.img_url.url }});
-                                     background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
-                                </div>
-                                <div class="d-flex flex-column pt-2" style="max-width: 300px;">
-                                    <h4 class="text-center text-break">
-                                        {{ voting.characters.all.1.first_name }}
-                                        {{ voting.characters.all.1.second_name }}
-                                    </h4>
-                                </div>
-                            </a>
+                            {% if voting.id|slugify in request.session.voted_list %}
+                                <a class="link-light link-underline link-underline-opacity-0">
+                                    <div class="img-thumbnail"
+                                         style="background-image: url({{ voting.characters.all.1.img_url.url }});
+                                         background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
+                                    </div>
+                                    <div class="d-flex flex-column pt-2" style="max-width: 300px;">
+                                        <h4 class="text-center text-break">
+                                            {{ voting.characters.all.1.first_name }}
+                                            {{ voting.characters.all.1.second_name }}
+                                        </h4>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'add_vote' voting.id 'second_char_votes' %}"
+                                   class="link-light link-underline link-underline-opacity-0 hover-effect">
+                                    <div class="img-thumbnail"
+                                         style="background-image: url({{ voting.characters.all.1.img_url.url }});
+                                         background-size: cover; background-repeat:no-repeat; width:300px; height:300px; ">
+                                    </div>
+                                    <div class="d-flex flex-column pt-2" style="max-width: 300px;">
+                                        <h4 class="text-center text-break">
+                                            {{ voting.characters.all.1.first_name }}
+                                            {{ voting.characters.all.1.second_name }}
+                                        </h4>
+                                    </div>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                     <hr class="mb-1" />
@@ -84,6 +126,17 @@
                     <div class="mb-3 text-body-secondary d-flex justify-content-center">
                         {{ voting.start_date }} - {{ voting.end_date }}
                     </div>
+                    {% if voting.id|slugify in request.session.voted_list %}
+                        {% if request.session.voted_list|get_item:voting.id == 'first_char_votes' %}
+                            <div class="mb-3 d-flex justify-content-center">
+                                You voted for {{ voting.characters.all.0.first_name }} {{ voting.characters.all.0.second_name }}
+                            </div>
+                        {% else %}
+                            <div class="mb-3 d-flex justify-content-center">
+                                You voted for {{ voting.characters.all.1.first_name }} {{ voting.characters.all.1.second_name }}
+                            </div>
+                        {% endif %}
+                    {% endif %}
                     <hr class="mb-4" />
                     <div class="d-flex justify-content-between mb-3">
                         <div>
@@ -136,7 +189,7 @@
                             </div>
                         </div>
                     </div>
-                    <hr class="mb-3" />
+                    <hr class="mb-1" />
                 </div>
             </div>
         {% endif %}
